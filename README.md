@@ -22,8 +22,8 @@ COPY html /usr/share/nginx/html<br>
 $ mkdir html<br>
 $ vi html/index.html<br>
 <html><br>
-<head><title>docker-ecr</title></head><br>
-<body><h1>Xin chao docker-ecr</h1></body><br>
+<head><title>congnm</title></head><br>
+<body><h1>Hello docker-ecr</h1></body><br>
 </html><br>
 
 
