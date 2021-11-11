@@ -1,59 +1,62 @@
-1. Tạo IAM user
-"Create new group, has the following permision:
-1. AmazonEC2ContainerRegistryFullAccess
-2. AmazonECS_FullAccess"
+Deploy Docker in AWS/ECS
 
-2. Cài EC2 có usedata.
-3. Cấu hình AWS CLI
-aws configure
-input data key..vv..v
-Check by cmd: aws configuration list
-
-4. Tạo docker image
-cd /home/
-mkdir nginx
-cd ndinx
-$ vi Dockerfile
-FROM nginx
-COPY html /usr/share/nginx/html
-
-$ mkdir html
-$ vi html/index.html
-<html>
-<head><title>Tin hoc that la don gian</title></head>
-<body><h1>Xin chao tin hoc that la don gian</h1></body>
-</html>
-for exit:  ":wq"
-
-$docker build -t [Image Name]:tag .
-        ->docker build -t tinhocthatladongian:v1 .
-Check: docker images
+1. Install EC2<br>
+* #This is Data use.
+* >#!/bin/bash<br>
+* >yum update -y<br>
+* >yum install -y docker<br>
+* >service docker start<br>
+* >chkconfig docker on<br>
+* >curl -L "https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose<br>
+* >chmod +x /usr/local/bin/docker-compose<br>
 
 
-- AWS ECR Login
-aws ecr get-login --no-include-email --region eu-west-2
+
+$ mkdir nginx<br>
+$ cd nginx<br>
+$ vi Dockerfile<br>
+FROM nginx<br>
+COPY html /usr/share/nginx/html<br>
 
 
-- Tạo repository lên AWS/ECR(Amazon Elastic Container Registry)
-aws ecr create-repository --repository-name [Repository Name] --region eu-west-2
-->aws ecr create-repository --repository-name tinhocthatladongian --region eu-west-2
+$ mkdir html<br>
+$ vi html/index.html<br>
+<html><br>
+<head><title>docker-ecr</title></head><br>
+<body><h1>Xin chao docker-ecr</h1></body><br>
+</html><br>
 
 
-- Tạo tag version docker image
-docker tag [Image Name]:tag [Repository ULR] đã tạo ra ở bước trên]
-->docker tag tinhocthatladongian:v1 251123607109.dkr.ecr.eu-west-2.amazonaws.com/tinhocthatladongian
+*$docker build -t [Image Name]:tag .<br>
+	->docker build -t docker-ecr:v1 .<br>
 
-- Push lên AWS/ECR
-docker push [Repository ULR]
-->docker push 251123607109.dkr.ecr.eu-west-2.amazonaws.com/tinhocthatladongian
-For check pushed?? -> ECS -> Repository -> check
-     - Next is: task definitaion -> Create new task definitision -> EC2 ->
-     
-     
-     
-     
-![image](https://user-images.githubusercontent.com/44230257/141230023-2cc5c0da-247e-498e-8373-a2631f98da92.png)
-![image](https://user-images.githubusercontent.com/44230257/141230069-3269f525-2e87-4e70-9dba-117d020e6f63.png)
-![image](https://user-images.githubusercontent.com/44230257/141230080-48e008ff-963f-4f1e-90cc-395374678d4d.png)
+*- AWS ECR Login<br>
+aws ecr get-login --no-include-email --region ap-northeast-1<br>
 
 
+*- Create repository on AWS/ECR(Amazon Elastic Container Registry)<br>
+aws ecr create-repository --repository-name [Repository Name] --region ap-northeast-1<br>
+->aws ecr create-repository --repository-name docker-ecr --region ap-northeast-1<br>
+
+<br>
+*- Create tag version docker image<br>
+docker tag [Image Name]:tag [Repository ULR] created below]<br>
+->docker tag docker-ecr:v1 310045062335.dkr.ecr.ap-northeast-1.amazonaws.com/docker-ecr<br>
+
+*- Push in  AWS/ECR<br>
+docker push [Repository ULR]<br>
+->docker push 251123607109.dkr.ecr.ap-northeast-1.amazonaws.com/docker-ecr<br>
+
+- Create Task trên AWC/ECS<br>
+- Create Clusters on AWC/ECS<br>
+- Create Service on AWC/ECS<br>
+
+
+
+
+
+
+*Batch delete commands<br>
+        docker stop $(docker ps -a -q)<br>
+        docker rm $(docker ps -a -q)<br>
+        docker rmi -f $(docker images -a -q)<br>
